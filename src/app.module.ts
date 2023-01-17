@@ -3,7 +3,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { WinstonModule } from 'nest-winston';
 import { join } from 'path';
 
@@ -16,6 +16,7 @@ import { LoggingInterceptor } from './shared/core/logging-interceptor';
 import { loggerConfig } from './shared/logger/logger.config';
 import { UserModule } from './modules/user/user.module';
 import config from './shared/config/config';
+import { GqlThrottlerGuard } from './shared/core/throttler.guard';
 
 @Module({
   imports: [
@@ -45,24 +46,24 @@ import config from './shared/config/config';
         }
       })
     }),
-    // ThrottlerModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: (config: ConfigService) => ({
-    //     ttl: config.get('THROTTLE_TTL'),
-    //     limit: config.get('THROTTLE_LIMIT')
-    //   })
-    // }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        ttl: config.get('THROTTLE_TTL'),
+        limit: config.get('THROTTLE_LIMIT')
+      })
+    }),
     WinstonModule.forRoot(loggerConfig),
     UserModule
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: GqlThrottlerGuard
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor
