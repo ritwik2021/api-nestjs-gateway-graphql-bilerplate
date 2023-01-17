@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 /**
  * LoggingInterceptor
  *
- * Interceptor to log incoming requests.
+ * @description Interceptor to log incoming requests.
  * Logs the request method, url, and the time it took to process the request.
  *
  * @class LoggingInterceptor
@@ -15,12 +15,6 @@ import { tap } from 'rxjs/operators';
  */
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  /**
-   * @param {ExecutionContext} context
-   * @param {CallHandler} next
-   * @returns {Observable<any>}
-   * @memberof LoggingInterceptor
-   */
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
     const req = context.switchToHttp().getRequest();

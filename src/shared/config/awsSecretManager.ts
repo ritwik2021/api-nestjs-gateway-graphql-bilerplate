@@ -12,10 +12,7 @@ const client = new AWS.SecretsManager({
 
 /**
  * AsyncLoadSecretsFromAWS
- *
- * Asynchronously loads secrets from AWS Secrets Manager and stores them in the process environment.
- *
- * @export
+ * @description Asynchronously loads secrets from AWS Secrets Manager and stores them in the process environment.
  * @returns {Promise<void>}
  * @author Ritwik Rohitashwa
  */
