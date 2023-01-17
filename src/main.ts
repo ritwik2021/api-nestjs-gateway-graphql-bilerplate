@@ -84,7 +84,7 @@ async function main() {
   app.use(compression()); // Compression Settings
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.getHttpAdapter().getInstance().disable('Server');
-  // app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe());
 
   app.use(xss()); // XSS Filter
   app.use(hpp()); // Prevent http Parameter pollution
